@@ -98,14 +98,14 @@
       </link>
     </xacro:macro>
 
-
+    <!-- LINKS -->
 
     <!-- REAL SENSE CAMERA ===============================================================-->
-
 
     <!-- 2-segment camera mast with mount for camera -->
     <link name="${link_prefix}mast_link">
       <visual>
+       <!-- <origin xyz="0.006 0.0 0.0" rpy="0 0 ${-pi/2}"/> -->
         <origin xyz="-0.094 0.0 0.0" rpy="0 0 ${-pi/2}"/>
         <geometry>
           <mesh filename="package://leo_description/models/model_extensions/long_camera_mast.dae"/>
@@ -128,14 +128,14 @@
     </link>
 
     <joint name="mast_joint" type="fixed">
-        <parent link="${link_prefix}base_link"/>
-        <child link="${link_prefix}mast_link"/>
-        <origin xyz="${0.09-0.065} 0.0 -0.001" rpy="0 0 0"/>
+      <parent link="${link_prefix}base_link"/>
+      <child link="${link_prefix}mast_link"/>
+      <origin xyz="${0.09-0.065} 0.0 -0.001" rpy="0 0 0"/>
     </joint>
-
 
     <link name="${link_prefix}camera_mount_link">
       <visual>
+        <!-- <origin xyz="-0.001 0.0 0.0" rpy="0 0 ${pi/2}"/> -->
         <origin xyz="-0.099 0.0 0.0" rpy="0 0 ${pi/2}"/>
         <geometry>
           <mesh filename="package://leo_description/models/model_extensions/camera_mount_fixed_angle_20_degrees_v1.dae"/>
@@ -150,13 +150,13 @@
       </inertial>
     </link>
 
-    <joint name="camera_mount_joint" type="fixed" >
+    <joint name="camera_mount_joint" type="fixed">
       <parent link="${link_prefix}mast_link"/>
       <child link="${link_prefix}camera_mount_link"/>
       <origin xyz="0.0025 0.0 0.17" rpy="0 0 0"/>
     </joint>
 
-    
+
     <xacro:if value="${d455_camera}">
 
       <link name="${link_prefix}realsense_link"/>
@@ -171,11 +171,10 @@
         <origin xyz="-0.11 0.0 -0.042" rpy="0 0 0"/>
       </xacro:sensor_d455>
 
-      <joint name="${link_prefix}realsense_joint" type="fixed"> <!-- type="continuous" -->
+      <joint name="${link_prefix}realsense_joint" type="fixed">
         <origin xyz="0.044 0 0.0635" rpy="0 0.349 0"/>
         <parent link="${link_prefix}camera_mount_link"/>
         <child link="${link_prefix}realsense_link"/>
-        <!-- <axis xyz="0 1 0"/> -->
       </joint>
 
       <!-- 
@@ -192,7 +191,6 @@
 
     <!-- =================================================================================-->
 
-    <!-- LINKS -->
 
     <!-- Random shape-->
     <!-- <link name="${link_prefix}shape_link">
@@ -693,6 +691,7 @@
       </sensor>
     </gazebo>
 
+
     <!-- RGBD camera ============================================================================ -->
     <gazebo reference="${link_prefix}realsense_link">
       <sensor type="rgbd_camera" name="realsense_d455"> 
@@ -748,7 +747,7 @@
           </camera>
       </sensor>
     </gazebo>
-
+    
 
     <!-- rocker differential -->
     <gazebo>
