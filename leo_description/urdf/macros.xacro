@@ -106,7 +106,7 @@
     <!-- 2-segment camera mast with mount for camera -->
     <link name="${link_prefix}mast_link">
       <visual>
-        <origin xyz="-0.094 0.0 0.0" rpy="0 0 ${-pi/2}"/>
+        <origin xyz="-0.006 0.0 0.0" rpy="0 0 ${-pi/2}"/>
         <geometry>
           <mesh filename="package://leo_description/models/model_extensions/long_camera_mast.dae"/>
         </geometry>
@@ -130,13 +130,13 @@
     <joint name="mast_joint" type="fixed">
         <parent link="${link_prefix}base_link"/>
         <child link="${link_prefix}mast_link"/>
-        <origin xyz="${0.09-0.065} 0.0 -0.001" rpy="0 0 0"/>
+        <origin xyz="${0.09-0.065-0.1} 0.0 -0.001" rpy="0 0 0"/>
     </joint>
 
 
     <link name="${link_prefix}camera_mount_link">
       <visual>
-        <origin xyz="-0.099 0.0 0.0" rpy="0 0 ${pi/2}"/>
+        <origin xyz="-0.001 0.0 0.0" rpy="0 0 ${pi/2}"/>
         <geometry>
           <mesh filename="package://leo_description/models/model_extensions/camera_mount_fixed_angle_20_degrees_v1.dae"/>
         </geometry>
@@ -168,7 +168,7 @@
       
       <xacro:sensor_d455 name="${link_prefix}realsense_camera" parent="${link_prefix}realsense_link">
         <!-- <origin xyz="-0.01 0.0 -0.002" rpy="0 0 0"/> -->
-        <origin xyz="-0.11 0.0 -0.042" rpy="0 0 0"/>
+        <origin xyz="-0.01 0.0 -0.002" rpy="0 0 0"/>
       </xacro:sensor_d455>
 
       <joint name="${link_prefix}realsense_joint" type="fixed"> <!-- type="continuous" -->
@@ -428,6 +428,7 @@
       <parent link="${link_prefix}base_link"/>
       <child link="${link_prefix}imu_frame"/>
     </joint>
+
     
     <!-- LiDAR joints -->
     <joint name="${joint_prefix}lidar_base_joint" type="fixed">
