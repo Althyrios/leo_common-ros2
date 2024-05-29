@@ -104,7 +104,8 @@
 
 
     <!-- 2-segment camera mast with mount for camera -->
-    <link name="${link_prefix}mast_link">
+    <!-- Mast Link -->
+    <!-- <link name="${link_prefix}mast_link">
       <visual>
         <origin xyz="-0.006 0.0 0.0" rpy="0 0 ${-pi/2}"/>
         <geometry>
@@ -131,12 +132,12 @@
         <parent link="${link_prefix}base_link"/>
         <child link="${link_prefix}mast_link"/>
         <origin xyz="${0.09-0.065-0.1} 0.0 -0.001" rpy="0 0 0"/>
-    </joint>
+    </joint> -->
 
-
+    <!-- Camera Mount Link
     <link name="${link_prefix}camera_mount_link">
       <visual>
-        <origin xyz="-0.001 0.0 0.0" rpy="0 0 ${pi/2}"/>
+        <origin xyz="-0.01 0.0 0.0" rpy="0 0 ${pi/2}"/>
         <geometry>
           <mesh filename="package://leo_description/models/model_extensions/camera_mount_fixed_angle_20_degrees_v1.dae"/>
         </geometry>
@@ -148,46 +149,46 @@
           iyy="0.01045" iyz="0.0002226"
           izz="0.01817"/>
       </inertial>
-    </link>
-
+    </link> -->
+<!-- 
     <joint name="camera_mount_joint" type="fixed" >
       <parent link="${link_prefix}mast_link"/>
       <child link="${link_prefix}camera_mount_link"/>
       <origin xyz="0.0025 0.0 0.17" rpy="0 0 0"/>
-    </joint>
+    </joint> -->
 
     
-    <xacro:if value="${d455_camera}">
+    <!-- <xacro:if value="${d455_camera}">
 
       <link name="${link_prefix}realsense_link"/>
 
       <xacro:include filename="$(find leo_description)/urdf/realsense_d455/_d455.urdf.xacro"/>
 
-      <!-- /home/ism_student_2023/ros2_ws/install/leo_description/share/leo_description/urdf/realsense_d455/_d455.urdf.xacro -->
+      /home/ism_student_2023/ros2_ws/install/leo_description/share/leo_description/urdf/realsense_d455/_d455.urdf.xacro
 
       
       <xacro:sensor_d455 name="${link_prefix}realsense_camera" parent="${link_prefix}realsense_link">
-        <!-- <origin xyz="-0.01 0.0 -0.002" rpy="0 0 0"/> -->
+        <origin xyz="-0.01 0.0 -0.002" rpy="0 0 0"/>
         <origin xyz="-0.01 0.0 -0.002" rpy="0 0 0"/>
       </xacro:sensor_d455>
 
-      <joint name="${link_prefix}realsense_joint" type="fixed"> <!-- type="continuous" -->
+      <joint name="${link_prefix}realsense_joint" type="fixed"> 
         <origin xyz="0.044 0 0.0635" rpy="0 0.349 0"/>
         <parent link="${link_prefix}camera_mount_link"/>
         <child link="${link_prefix}realsense_link"/>
-        <!-- <axis xyz="0 1 0"/> -->
+        <axis xyz="0 1 0"/>
       </joint>
-
-      <!-- 
-          <link name="/realsense_camera_leo02"/>
+      
+      
+          <link name="${link_prefix}realsense_camera_optical_frame"/>
           <joint name="${link_prefix}realsense_optical_joint" type="fixed">
-            <origin xyz="0.044 0 0.0635" rpy="0 0.349 0"/>
-            <parent link="${link_prefix}camera_mount_link"/>
-            <child link="/realsense_camera_leo02"/>
+            <origin xyz="0.0 0 0.0" rpy="-${pi/2} 0 -${pi/2}"/>
+            <parent link="${link_prefix}realsense_camera_link"/>
+            <child link="${link_prefix}realsense_camera_optical_frame"/>
           </joint>
-      -->
+     
 
-    </xacro:if>
+    </xacro:if> -->
 
 
     <!-- =================================================================================-->
@@ -430,6 +431,32 @@
     </joint>
 
     
+    <joint name="${joint_prefix}realsense_joint" type="fixed">
+      <origin xyz="0 0 0.15" rpy="0 0.43 0"/>
+      <parent link="${link_prefix}base_link"/>
+      <child link="${link_prefix}rs_link"/>
+    </joint>
+
+    <joint name="${joint_prefix}rs_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy=" -1.57079632679 0 -1.57079632679"/>
+      <parent link="${link_prefix}rs_link"/>
+      <child link="${link_prefix}rs_optical_frame"/>
+    </joint>
+
+
+    <link name="${link_prefix}rs_link"/>
+    <link name="${link_prefix}rs_optical_frame"/>
+
+
+<!-- 
+    <xacro:if value="${d455_camera}"> 
+      <xacro:include filename="$(find leo_description)/urdf/realsense_d455/_d455.urdf.xacro"/>
+
+      <xacro:sensor_d455 name="${link_prefix}realsense_camera" parent="${link_prefix}rs_link">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:sensor_d455>
+    </xacro:if> -->
+
     <!-- LiDAR joints -->
     <joint name="${joint_prefix}lidar_base_joint" type="fixed">
       <origin xyz="0.04 0 0" rpy="0 0 0"/>
@@ -455,7 +482,24 @@
   <!-- LEO GAZEBO -->
 
   <xacro:macro name="leo_gazebo"
-               params="robot_ns:='''">
+               params="robot_ns:=''
+                collision:=true
+                high_quality_mesh:=false
+                gazebo_preserve_fixed_joint:=false
+                gazebo_camera_enable:=true
+                gazebo_camera_update_rate:=15.0
+                gazebo_camera_width:=640
+                gazebo_camera_height:=480
+                gazebo_camera_horizontal_fov:=${87*pi/180}
+                gazebo_camera_vertical_fov:=${58*pi/180}
+                gazebo_camera_color_clip_near:=0.5
+                gazebo_camera_color_clip_far:=1000.0
+                gazebo_camera_depth_clip_near:=0.5
+                gazebo_camera_depth_clip_far:=5.0
+                gazebo_camera_noise_mean:=0.0
+                gazebo_camera_noise_stddev:=0.001
+                gazebo_camera_visibility_mask:=0
+                ">
 
     <xacro:property name="link_prefix" value=""/>
     <xacro:if value="${robot_ns != '' and robot_ns != '/'}">
@@ -684,7 +728,7 @@
                 <p1>0.000310</p1>
                 <p2>0.000000</p2>
                 <center>0.5 0.5</center>
-              </distortion>              
+              </distortion>
           </camera>
           <always_on>1</always_on>
           <update_rate>30</update_rate>
@@ -694,61 +738,45 @@
       </sensor>
     </gazebo>
 
-    <!-- RGBD camera ============================================================================ -->
-    <gazebo reference="${link_prefix}realsense_link">
-      <sensor type="rgbd_camera" name="realsense_d455"> 
-          <!-- <pose>0 0 0 0 0 0</pose> -->
-          <ignition_frame_id>${link_prefix}realsense_link</ignition_frame_id>
+     <!-- RGBD camera ============================================================================ -->
+    
+    <gazebo reference="${link_prefix}rs_link">
+      <sensor name="realsense_d455" type="rgbd_camera">
           <topic>${link_prefix}leo/realsense_d455</topic>
-          <update_rate>15</update_rate>
+          <ignition_frame_id>${link_prefix}rs_optical_frame</ignition_frame_id>
           <always_on>1</always_on>
-          <visualize>true</visualize>
+          <update_rate>${gazebo_camera_update_rate}</update_rate>
+          <!-- <pose relative_to="${link_prefix}rs_optical_frame">0 0 0 ${pi/2} 0 ${pi/2}</pose> -->
           <camera>
-            <horizontal_fov>1.0472</horizontal_fov>
             <image>
-              <width>640</width>
-              <height>480</height>
               <format>R8G8B8</format>
+              <width>${gazebo_camera_width}</width>
+              <height>${gazebo_camera_height}</height>
             </image>
-            <lens>
-              <intrinsics>
-                <!-- fx = fy = width / ( 2 * tan (hfov / 2) ) -->
-                <fx>554.25469</fx>
-                <fy>554.25469</fy>
-                <!-- cx = ( width + 1 ) / 2 -->
-                <cx>320.5</cx>
-                <!-- cy = ( height + 1 ) / 2 -->
-                <cy>240.5</cy>
-                <s>0</s>
-              </intrinsics>
-            </lens>
-            <distortion>
-              <k1>0.0</k1>
-              <k2>0.0</k2>
-              <k3>0.0</k3>
-              <p1>0.0</p1>
-              <p2>0.0</p2>
-              <center>0.5 0.5</center> 
-            </distortion>
+            <horizontal_fov>${gazebo_camera_horizontal_fov}</horizontal_fov>
+            <vertical_fov>${gazebo_camera_vertical_fov}</vertical_fov>
+            <clip>
+              <near>${gazebo_camera_color_clip_near}</near>
+              <far>${gazebo_camera_color_clip_far}</far>
+            </clip>
             <depth_camera>
-              <!-- <output>640</output> -->
+              <output>depths</output>
               <clip>
-                <near>0.001</near>
-                <far>300</far>
+                <near>${gazebo_camera_depth_clip_near}</near>
+                <far>${gazebo_camera_depth_clip_far}</far>
               </clip>
             </depth_camera>
-            <clip>
-              <near>0.005</near>
-              <far>300</far>
-            </clip>
             <noise>
               <type>gaussian</type>
-              <mean>0.0</mean>
-              <stddev>0.007</stddev>
+              <mean>${gazebo_camera_noise_mean}</mean>
+              <stddev>${gazebo_camera_noise_stddev}</stddev>
             </noise>
+            <visibility_mask>${gazebo_camera_visibility_mask}</visibility_mask>
+            <visualize>true</visualize>
           </camera>
-      </sensor>
-    </gazebo>
+          <visualize>true</visualize>
+        </sensor>
+      </gazebo>
 
 
     <!-- rocker differential -->
