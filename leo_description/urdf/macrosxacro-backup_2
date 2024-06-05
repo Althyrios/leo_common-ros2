@@ -488,8 +488,8 @@
                 gazebo_preserve_fixed_joint:=false
                 gazebo_camera_enable:=true
                 gazebo_camera_update_rate:=15.0
-                gazebo_camera_width:=320
-                gazebo_camera_height:=240
+                gazebo_camera_width:=640
+                gazebo_camera_height:=480
                 gazebo_camera_horizontal_fov:=${87*pi/180}
                 gazebo_camera_vertical_fov:=${58*pi/180}
                 gazebo_camera_color_clip_near:=0.5
@@ -746,7 +746,6 @@
         <ignition_frame_id>${link_prefix}rs_optical_frame</ignition_frame_id>
         <always_on>true</always_on>
         <update_rate>${gazebo_camera_update_rate}</update_rate>
-        <visualize>true</visualize>
         <!-- <pose relative_to="${link_prefix}rs_optical_frame">0 0 0 ${pi/2} 0 ${pi/2}</pose> -->
         <camera>
           <image>
@@ -754,8 +753,7 @@
             <width>${gazebo_camera_width}</width>
             <height>${gazebo_camera_height}</height>
           </image>
-          <!-- <horizontal_fov>${gazebo_camera_horizontal_fov}</horizontal_fov> -->
-          <horizontal_fov>1.042</horizontal_fov>
+          <horizontal_fov>${gazebo_camera_horizontal_fov}</horizontal_fov>
           <vertical_fov>${gazebo_camera_vertical_fov}</vertical_fov>
           <clip>
             <near>${gazebo_camera_color_clip_near}</near>
@@ -776,6 +774,7 @@
           <visibility_mask>${gazebo_camera_visibility_mask}</visibility_mask>
           <visualize>true</visualize>
         </camera>
+        <visualize>true</visualize>
       </sensor>
     </gazebo>
 
